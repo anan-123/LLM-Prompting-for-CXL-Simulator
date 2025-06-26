@@ -2,7 +2,6 @@
 
 Extending architectural simulators for emerging memory technologies using Large Language Models (LLMs)
 
----
 
 ## Project Overview
 
@@ -11,7 +10,6 @@ This research project explores the feasibility of using Large Language Models (L
 **Objective:**  
 Develop a CXL-capable version of the VANS simulator by using LLMs to automate the extension process rather than building from scratch.
 
----
 
 ## Research Questions
 
@@ -20,7 +18,6 @@ Develop a CXL-capable version of the VANS simulator by using LLMs to automate th
 - What are the capabilities and limitations of AI-assisted simulator development?
 - How does LLM-generated code compare to traditionally developed code?
 
----
 
 ## Architecture
 
@@ -50,33 +47,40 @@ src/
 - **Event-Driven Simulation:** Maintains cycle-accurate performance modeling
 - **Hybrid Memory Hierarchy:** Enables simulation of systems with both DRAM and CXL-attached memory
 
----
+## Experimental Methodology
 
-## Methodology
+To design effective prompts for building CXL-VANS, ideas from [4], [5], and [6] were referenced. Various prompting techniques were experimented with, described below:
 
-The project tests various prompt engineering strategies to generate and refine simulator code using LLMs:
+### 3.1 Zero Shot Prompting
 
-### Prompting Techniques
+- Uses a single prompt with all details.  
+- Relies on LLM’s retrieval-augmented generation capabilities.  
+- Lacks deeper context for complex tasks.
 
-- **Zero-Shot Prompting:** One-shot prompt with full context but no prior interaction
-- **Role-Based Prompting:** Assigns system roles to LLMs and provides detailed file structure
-- **Few-Shot Learning:** Supplies example code to guide generation
-- **Chain-of-Thought (CoT):** Breaks down complex tasks into smaller logical steps
-- **Iterative Refinement:** Generates and improves code through multiple feedback cycles
+### 3.2 Role-based Prompting
 
----
+- Assigns a specific role to the LLM (e.g., system architect).  
+- Provides detailed file structure and architecture context.  
+- Effective for complex coding and system-level reasoning.  
+
+### 3.3 Few-shot Learning
+
+- Supplies example code snippets as references.  
+- Helps with pattern-based or repetitive code generation.  
+- Performance depends on example quality, less adaptable to new methods.
+
+### 3.4 Chain-of-Thought (CoT) Prompting
+
+- Breaks complex tasks into step-by-step reasoning.  
+- Produces organized solutions but may diverge from original structure.
+
+### 3.5 Iterative Refinement Prompting
+
+- Multiple rounds of interaction and code refinement.  
+- Effective for debugging and improving code quality over iterations.
+
 
 ## Experimental Results
-
-### Performance Metrics
-
-| Access Pattern | DRAM Utilization | Latency / Operations      |
-|----------------|------------------|----------------------------|
-| Sequential     | 82.81%           | 92.03 ns                   |
-| Hotspot        | 80.04%           | 200,000 operations         |
-| Random         | 64.03%           | 250,000 operations         |
-
-- Performance improved by up to 15.04% in optimized configurations
 
 ### LLM Evaluation
 
@@ -85,7 +89,6 @@ The project tests various prompt engineering strategies to generate and refine s
 - Refinement Cycles: Typically 2–3 iterations per module
 - Success Rate: Dependent on prompting strategy and task complexity
 
----
 
 ## Key Findings
 
@@ -148,7 +151,7 @@ The project tests various prompt engineering strategies to generate and refine s
 - Apply this approach to additional programming languages and hardware models
 - Define benchmark metrics for evaluating LLM-based code generation
 
----
+
 
 ## References
 
