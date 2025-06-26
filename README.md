@@ -1,159 +1,166 @@
-﻿# LLM-Prompting-for-CXL-Simulator
-Exploring the feasibility of using Large Language Models (LLMs) to extend architectural simulators for emerging memory technologies
+# LLM-Prompting-for-CXL-Simulator
+
+**Extending architectural simulators for emerging memory technologies using Large Language Models (LLMs)**
+
+---
 
 ## Project Overview
-This research project investigates the effectiveness of Large Language Models (ChatGPT and Claude) in extending the existing VANS (Validated cycle-Accurate NVRAM Simulator) to support CXL (Compute Express Link) memory simulation. Instead of traditional manual coding approaches, we leverage various prompt engineering techniques to generate code for the CXL-VANS simulator.
-Research Objective: Build a CXL-capable simulator by evaluating whether LLMs can effectively extend existing architectural simulators without building from scratch.
-Key Research Questions
 
-Can LLMs effectively extend complex architectural simulators?
-Which prompting techniques work best for systems-level code generation?
-What are the limitations and capabilities of AI-assisted simulator development?
-How does LLM-generated code compare to traditional development approaches?
+This research explores the feasibility of using Large Language Models (ChatGPT, Claude) to extend the VANS (Validated cycle-Accurate NVRAM Simulator) with support for CXL (Compute Express Link) memory simulation. Instead of manual coding, we apply advanced prompt engineering techniques to generate simulator code automatically.
+
+**Goal:** Build a CXL-capable simulator by leveraging LLMs to extend existing architectural simulators without starting from scratch.
+
+---
+
+## Key Research Questions
+
+- Can LLMs effectively extend complex architectural simulators?  
+- Which prompting strategies best support systems-level code generation?  
+- What are the capabilities and limitations of AI-assisted simulator development?  
+- How does LLM-generated code compare with traditional development methods?
+
+---
 
 ## Architecture
-Base Components
 
-VANS: Event-driven cycle-accurate simulator for Optane DIMM microarchitecture with modular design
-CXL Memory: Compute Express Link interconnect standard enabling memory sharing and resource pooling across processors
-LLMs: Claude 3.5 Sonnet (claude-3-5-sonnet-20241022) and GPT-3.5/4 Turbo for automated code generation
+- **Base Simulator:** VANS — a cycle-accurate event-driven simulator for Optane DIMM microarchitecture  
+- **Target Extension:** CXL memory device and system integration  
+- **LLMs Used:** Claude 3.5 Sonnet and GPT-3.5/4 Turbo for automated code generation
 
-Generated Components
+### Core Components Generated
+
 src/
-├── cxl_memory.cpp/h     - CXL Type 3 memory device model with protocol-level latency
-├── cxl_system.cpp/h     - Memory controller and request routing management
-├── factory.cpp          - Extended component factory for CXL registration
-├── vans.cpp             - Modified integration layer with CXL support
+├── cxl_memory.cpp/h - CXL Type 3 memory device model with protocol-level latency
+├── cxl_system.cpp/h - Memory controller and request routing management
+├── factory.cpp - Extended component factory for CXL registration
+├── vans.cpp - Modified integration layer with CXL support
 └── config/
-    └── cxl_config.cfg   - CXL-specific configuration parameters
-System Integration
-The CXL extension integrates with VANS through:
+└── cxl_config.cfg - CXL-specific configuration parameters
 
-Modular Architecture: Maintains VANS component structure
-Factory Pattern: Enables configurable CXL memory instantiation
-Event-Driven Model: Preserves cycle-accurate simulation timing
-Memory Hierarchy: Supports local DRAM + CXL memory configurations
+### System Integration
+
+The CXL extension integrates with VANS through:  
+
+- **Modular Architecture:** Maintains VANS component structure  
+- **Factory Pattern:** Enables configurable CXL memory instantiation  
+- **Event-Driven Model:** Preserves cycle-accurate simulation timing  
+- **Memory Hierarchy:** Supports local DRAM + CXL memory configurations  
+
+---
 
 ## Experimental Methodology
-To design effective prompts for building CXL-VANS, I
-have used the ideas from [4], [6] and [5] as references. First, I
-use a simple method of feeding the LLM with all the required
-materials and asking it to produce the code and structured
-plan to extend VANS. The other prompts are more detailed
-and give the LLM more context and information to produce
-better results. I have experimented with different prompting techniques from [6] and [5]. These prompts define the
-pipeline or functionality of CXL VANS in detail and also use
-multiple refinements to arrive at the results. The different
-styles of prompts experimented is given below:
-3.1 Zero Shot Prompting
-In this approach, I use a single prompt with all the details
-of the problem statement. The LLM should understand this
-prompt and produce output without any prior context. This
-method uses the LLM’s capability to do Retrieval-Augmented
-Generation: Incorporating relevant documentation snippets
-from the paper. This approach lacks the context need for
-complex tasks.
-3.2 Role based prompting
-Using the [4] prompts as reference, I have used role based
-prompting with a lot of information about the file structure
-and code to design the CXL VANS, mimicking some of the
-reference prompts. This method involves assigning a specific
-role to an LLM to influence the output. Also, I provide
-further information on the file structures, and architecture
-allowing the LLM to simulate better. This method is effective
-for complex coding tasks and system level reasoning. This
-method is expected to give more accurate responses and have
-a good debugging capabilities.
-3.3 Few shot Learning
-In this approach, I feed the LLM with a few snippets of code
-and ask it to generate new code based on the snippets as
-reference. This is a part of a Multi-Stage Prompting Pipeline
-where LLM learns from some reference codes. It works
-well when tasks follow a specific pattern or have repetitive
-modules e.g. defining memory etc. It’s performance depends
-on quality of the examples given and it can struggle with
-generalizing or adapting to new methods.
-3.4 Chain-of-Thought (CoT) Prompting
-This method involves breaking down complex tasks into stepby-step reasoning. The LLM is prompted with these sequence
-of tasks and it solves it sequentially. This approach is useful
-to correct and provide feedback when LLM reasoning is done
-for these steps. The solutions are well organized but may not
-always align with the structure or language of the original
-problem.
-3.5 Iterative Refinement Prompting
-This method involves multiple refinements to improve the
-code with multiple interactions with the LLM. This method
-breaks the tasks into smaller steps and builds on top of these.
-Its effective for debugging and improving the quality of code
-as it moves to next step.
+
+To design effective prompts for building CXL-VANS, ideas from [4], [5], and [6] were referenced. Various prompting techniques were experimented with, described below:
+
+### 3.1 Zero Shot Prompting
+
+- Uses a single prompt with all details.  
+- Relies on LLM’s retrieval-augmented generation capabilities.  
+- Lacks deeper context for complex tasks.
+
+### 3.2 Role-based Prompting
+
+- Assigns a specific role to the LLM (e.g., system architect).  
+- Provides detailed file structure and architecture context.  
+- Effective for complex coding and system-level reasoning.  
+
+### 3.3 Few-shot Learning
+
+- Supplies example code snippets as references.  
+- Helps with pattern-based or repetitive code generation.  
+- Performance depends on example quality, less adaptable to new methods.
+
+### 3.4 Chain-of-Thought (CoT) Prompting
+
+- Breaks complex tasks into step-by-step reasoning.  
+- Produces organized solutions but may diverge from original structure.
+
+### 3.5 Iterative Refinement Prompting
+
+- Multiple rounds of interaction and code refinement.  
+- Effective for debugging and improving code quality over iterations.
+
+---
 
 ## Results Summary
-Performance Metrics
 
-Sequential Pattern: 82.81% local DRAM utilization, 92.03ns average latency
-Hotspot Pattern: 80.04% local DRAM utilization, 200K operations
-Random Pattern: 64.03% local DRAM utilization, 250K operations
-Performance Improvement: Up to 15.04% in optimized configurations
+### LLM Efficiency
 
-LLM Efficiency
+- Average Token Consumption: ~1000 tokens per session  
+- Generation Time: Seconds to minutes per iteration  
+- Refinement Cycles: Typically 2-3 for production-ready code  
+- Success Rate: Varies by prompting technique
 
-Average Token Consumption: ~1000 tokens per session
-Generation Time: Few seconds to minutes per iteration
-Refinement Cycles: 2-3 iterations typically needed for production code
-Success Rate: Variable by technique (detailed in report)
+---
 
+## 🔍 Key Findings
 
+### ✅ Strengths of LLM-Assisted Development
 
-🔍 Key Findings
-✅ Strengths of LLM-Assisted Development
+- Rapid Prototyping: Quick boilerplate code generation  
+- Documentation: Clear explanation of complex concepts  
+- Integration Planning: Clear architectural outlines  
+- Debugging Assistance: Good at spotting common errors  
+- Code Clarity: Produces clean, readable code
 
-Rapid Prototyping: Quick generation of boilerplate code
-Documentation: Excellent at explaining complex concepts
-Integration Planning: Provides clear architectural outlines
-Debugging Assistance: Effective at identifying common errors
-Code Clarity: Generates clean, readable code structures
+### ⚠️ Limitations Identified
 
-⚠️ Limitations Identified
+- Complex Integration: Difficulty with system-level interconnections  
+- Domain Expertise: Needs extensive context for specialized domains  
+- File Structure Awareness: Requires explicit architectural guidance  
+- Optimization: Limited performance tuning capabilities  
+- Error Propagation: Errors can compound over iterations
 
-Complex Integration: Struggles with system-level interconnections
-Domain Expertise: Requires extensive context for specialized domains
-File Structure Awareness: Needs explicit architectural guidance
-Optimization: Limited ability to optimize for performance
-Error Propagation: Can compound errors across iterations
+### 🎯 Best Practices Discovered
 
-🎯 Best Practices Discovered
+- Provide Explicit File Structure: Crucial for integration success  
+- Use Iterative Refinement: 2-3 cycles usually needed  
+- Combine Techniques: Hybrid prompting most effective  
+- Validate Early: Testing at each iteration  
+- Domain Context: Include relevant technical documentation
 
-Provide Explicit File Structure: Critical for successful integration
-Use Iterative Refinement: 2-3 cycles typically needed
-Combine Techniques: Hybrid approaches often most effective
-Validate Early: Implement testing at each iteration
-Domain Context: Include relevant technical documentation
+---
 
-📈 Performance Comparison
-MethodCompilation SuccessIntegration QualityCode AccuracyTime EfficiencyZero-Shot✅ High❌ Poor✅ Good✅ ExcellentRole-Based✅ High✅ Excellent⚠️ Partial❌ PoorFew-Shot❌ Failed⚠️ Moderate✅ Good✅ GoodChain-of-Thought❌ Failed❌ Poor⚠️ Moderate✅ GoodIterative❌ Failed⚠️ Moderate✅ Good⚠️ ModerateTemplate-Based✅ High⚠️ Moderate✅ Excellent✅ Good
-🔮 Future Work
-Immediate Next Steps
+## 📈 Performance Comparison
 
-Agentic Systems: Develop self-testing and error-correcting LLM agents for autonomous code improvement
-Code Verification: Implement LLM-assisted validation and testing frameworks
-Performance Optimization: Apply LLMs to identify and implement performance bottlenecks
+| Method              | Compilation Success | Integration Quality | Code Accuracy | Time Efficiency |
+|---------------------|--------------------|--------------------|---------------|-----------------|
+| Zero-Shot           | ✅ High             | ❌ Poor            | ✅ Good       | ✅ Excellent     |
+| Role-Based          | ✅ High             | ✅ Excellent        | ⚠️ Partial    | ❌ Poor         |
+| Few-Shot            | ❌ Failed           | ⚠️ Moderate         | ✅ Good       | ✅ Good         |
+| Chain-of-Thought    | ❌ Failed           | ❌ Poor             | ⚠️ Moderate   | ✅ Good         |
+| Iterative Refinement| ❌ Failed           | ⚠️ Moderate         | ✅ Good       | ⚠️ Moderate     |
+| Template-Based      | ✅ High             | ⚠️ Moderate         | ✅ Excellent  | ✅ Good         |
 
-Long-term Research Directions
+---
 
-Fine-Tuning: Train domain-specific models on architectural simulation codebases
-Context Management: Develop better methods for handling large codebases and technical documentation
-Multi-Simulator Extension: Apply proven techniques to other simulators (gem5, Ramulator, etc.)
-Hybrid Development: Establish best practices for human-LLM collaborative development workflows
+## 🔮 Future Work
 
-Experimental Extensions
+### Immediate Next Steps
 
-Advanced Prompting: Explore multi-agent prompting and tool-augmented generation
-Cross-Platform: Extend methodology to different programming languages and architectures
-Benchmarking: Develop standardized metrics for evaluating LLM code generation quality
+- Develop agentic LLM systems for autonomous testing and correction  
+- Implement LLM-assisted validation and testing frameworks  
+- Use LLMs for identifying and optimizing performance bottlenecks
 
-📚 References
+### Long-term Research Directions
 
-VANS Simulator - Base heterogeneous memory simulator
-CXLMemSim - Reference CXL memory simulator
-CXLMemSim Paper - Technical background on CXL memory simulation
-Prompt Engineering Guide - Prompting techniques reference
+- Fine-tune domain-specific LLMs on architectural simulation codebases  
+- Improve context management for large codebases and documentation  
+- Extend to multi-simulator support (gem5, Ramulator, etc.)  
+- Establish best practices for human-LLM collaborative workflows
+
+### Experimental Extensions
+
+- Explore multi-agent and tool-augmented prompting  
+- Extend methodology across languages and architectures  
+- Develop benchmarking metrics for LLM code generation quality
+
+---
+
+## 📚 References
+
+- VANS Simulator - Base heterogeneous memory simulator  
+- CXLMemSim - Reference CXL memory simulator  
+- CXLMemSim Paper - Technical background on CXL memory simulation  
+- Prompt Engineering Guide - Reference on prompting techniques  
+
